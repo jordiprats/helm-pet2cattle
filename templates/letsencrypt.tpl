@@ -11,6 +11,8 @@ spec:
     name: letsencrypt
 {{- range .Values.ingress.hosts }}  
   commonName: {{ .host }}
+  dnsNames:
+  - {{ .host }}
 {{- end }}  
 {{- end }}
 {{- end }}

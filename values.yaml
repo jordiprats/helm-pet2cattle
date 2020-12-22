@@ -39,6 +39,8 @@ ingress:
     - host: pet2cattle.com
       paths: []
   tls: []
+
+  annotations_tls: {}
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local

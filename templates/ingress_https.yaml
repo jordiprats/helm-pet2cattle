@@ -12,7 +12,7 @@ metadata:
   name: {{ $fullName }}-https
   labels:
     {{- include "pet2cattle.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations_ssl }}
+  {{- with .Values.ingress.annotations_tls }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
