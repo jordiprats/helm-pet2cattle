@@ -9,6 +9,7 @@ appVersion: 1.13
 
 sources:
 - https://github.com/jordiprats/helm-pet2cattle
+- https://github.com/jordiprats/flask-pet2cattle
 
 dependencies:
   - name: minio
