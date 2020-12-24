@@ -69,3 +69,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# minio dependency
+minio:
+  persistence:
+    size: 20Gi
