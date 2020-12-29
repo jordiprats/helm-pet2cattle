@@ -1,0 +1,9 @@
+{{- if .Values.s3sync.key -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-deploykeys
+type: Opaque
+data:
+{{ (.Files.Glob "deploykeys/*").AsSecrets | indent 2 }}
+{{- end -}}

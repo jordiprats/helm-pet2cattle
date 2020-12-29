@@ -42,11 +42,25 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "pet2cattle-s3sync.labels" -}}
+helm.sh/chart: s3sync-{{ include "pet2cattle.chart" . }}
+{{ include "pet2cattle.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
 {{- define "pet2cattle.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "pet2cattle.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "pet2cattle-s3sync.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "pet2cattle.name" . }}-s3sync
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

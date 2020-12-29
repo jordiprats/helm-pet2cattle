@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pet2cattle.fullname" . }}
+  name: {{ include "pet2cattle.fullname" . }}-s3sync
   labels:
-    {{- include "pet2cattle.labels" . | nindent 4 }}
+    {{- include "pet2cattle-s3sync.labels" . | nindent 4 }}
 spec:
 {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
 {{- end }}
   selector:
     matchLabels:
-      {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
+      {{- include "pet2cattle-s3sync.selectorLabels" . | nindent 6 }}
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "pet2cattle.selectorLabels" . | nindent 8 }}
+        {{- include "pet2cattle-s3sync.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -30,37 +30,34 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}-s3sync:1.0"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: MINIO_URL
               value: "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000"
             - name: MINIO_BUCKET
               value: "{{ .Values.pet2cattle.bucket.name }}"
-            - name: MINIO_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-minio
-                  key: accesskey
-            - name: MINIO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-minio
-                  key: secretkey
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            - name: POSTS_REPO
+              value: "{{ .Values.pet2cattle.posts.repo }}"
+          volumeMounts:
+            - name: miniosecret
+              mountPath: /etc/minio
+            {{ if .Values.s3sync.key -}}
+            - name: deploykeys
+              mountPath: /root/deploykeys
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: miniosecret
+          secret:
+            secretName: {{ .Release.Name }}-minio
+        {{- if .Values.s3sync.key }}
+        - name: deploykeys
+          secret:
+            defaultMode: 0600
+            secretName: {{ .Release.Name }}-deploykeys
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -73,6 +73,11 @@ affinity: {}
 pet2cattle:
   bucket:
     name: "pet2cattle"
+  posts:
+    repo: git@github.com:jordiprats/posts-repo.git
+
+s3sync:
+  key: false
 
 # minio dependency
 minio:
