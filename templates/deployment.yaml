@@ -33,6 +33,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: MINIO_URL
+              value: "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: MINIO_BUCKET
+              value: "{{ .Values.pet2cattle.bucket.name }}"
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
