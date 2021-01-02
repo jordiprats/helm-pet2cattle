@@ -17,5 +17,5 @@ spec:
             name: {{ include "pet2cattle.fullname" . }}-sitemapgen
             resources: {}
           restartPolicy: OnFailure
-  schedule: '0 * * * *'
+  schedule: '0 5 * * *'
 status: {}
