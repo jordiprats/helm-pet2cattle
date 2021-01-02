@@ -4,8 +4,8 @@ description: pet2cattle blog
 home: https://pet2cattle.com
 
 type: application
-version: 1.7
-appVersion: 2.8
+version: 2.0
+appVersion: 3.0
 
 sources:
 - https://github.com/jordiprats/helm-pet2cattle
