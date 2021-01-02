@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "pet2cattle.fullname" . }}-sitemapgen
+spec:
+  jobTemplate:
+    metadata:
+      name: {{ include "pet2cattle.fullname" . }}-sitemapgen
+    spec:
+      template:
+        spec:
+          containers:
+          - command:
+            - /usr/local/bin/python
+            - /code/sitemapgen.py
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            name: {{ include "pet2cattle.fullname" . }}-sitemapgen
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '0 * * * *'
+status: {}
