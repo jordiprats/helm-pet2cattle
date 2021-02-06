@@ -26,6 +26,49 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - command:
+          - /usr/local/bin/python
+          - /code/sitemapgen.py
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          env:
+            - name: MINIO_URL
+              value: "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000"
+            - name: MINIO_BUCKET
+              value: "{{ .Values.pet2cattle.bucket.name }}"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-minio
+                  key: accesskey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-minio
+                  key: secretkey
+          name: {{ include "pet2cattle.fullname" . }}-sitemap
+          resources: {}     
+        - command:
+          - /usr/local/bin/python
+          - /code/indexer.py
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          env:
+            - name: MINIO_URL
+              value: "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000"
+            - name: MINIO_BUCKET
+              value: "{{ .Values.pet2cattle.bucket.name }}"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-minio
+                  key: accesskey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-minio
+                  key: secretkey
+          name: {{ include "pet2cattle.fullname" . }}-indexer
+          resources: {}      
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
