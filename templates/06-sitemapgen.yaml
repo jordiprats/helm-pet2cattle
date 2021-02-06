@@ -31,7 +31,6 @@ spec:
                     key: secretkey
             name: {{ include "pet2cattle.fullname" . }}-sitemapgen
             resources: {}
-          restartPolicy: OnFailure
           - command:
             - /usr/local/bin/python
             - /code/indexer.py
