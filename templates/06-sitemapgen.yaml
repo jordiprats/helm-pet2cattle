@@ -32,5 +32,27 @@ spec:
             name: {{ include "pet2cattle.fullname" . }}-sitemapgen
             resources: {}
           restartPolicy: OnFailure
+          - command:
+            - /usr/local/bin/python
+            - /code/indexer.py
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            env:
+              - name: MINIO_URL
+                value: "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000"
+              - name: MINIO_BUCKET
+                value: "{{ .Values.pet2cattle.bucket.name }}"
+              - name: MINIO_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Release.Name }}-minio
+                    key: accesskey
+              - name: MINIO_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Release.Name }}-minio
+                    key: secretkey
+            name: {{ include "pet2cattle.fullname" . }}-indexer
+            resources: {}
+          restartPolicy: OnFailure
   schedule: '0 5 * * *'
 status: {}
