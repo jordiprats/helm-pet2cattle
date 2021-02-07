@@ -53,5 +53,5 @@ spec:
             name: {{ include "pet2cattle.fullname" . }}-indexer
             resources: {}
           restartPolicy: OnFailure
-  schedule: '0 5 * * *'
+  schedule: '0 0 * * *'
 status: {}
