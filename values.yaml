@@ -37,8 +37,9 @@ ingress:
     traefik.ingress.kubernetes.io/router.tls: "true"
     #traefik.ingress.kubernetes.io/redirect-entry-point: https
     traefik.ingress.kubernetes.io/redirect-permanent: "true"
-    traefik.ingress.kubernetes.io/redirect-regex: ^https?://www.pet2cattle.com/(.*)|^http://pet2cattle.com/(.*)
-    traefik.ingress.kubernetes.io/redirect-replacement: https://pet2cattle.com/$1
+    # https://regex101.com
+    traefik.ingress.kubernetes.io/redirect-regex: ^(https?://www.pet2cattle.com|http://pet2cattle.com)/(.*)
+    traefik.ingress.kubernetes.io/redirect-replacement: https://pet2cattle.com/$2
 
   hosts:
     - host: pet2cattle.com
