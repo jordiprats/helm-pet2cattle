@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pet2cattle.fullname" . }}-static
+  labels:
+    {{- include "pet2cattle.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.static.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "pet2cattle.selectorLabels" . | nindent 8 }}
+        component: static
+    spec:
+      volumes:
+        - name: static-data
+          emptyDir: {}
+      initContainers:
+      - name: clone
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command: [ "git", "clone", "{{ .Values.pet2cattle.posts.repo }}", "/mnt" ]
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - mountPath: /mnt
+            name: static-data
+      containers:
+      - name: pet2cattle-static
+        image: "{{ .Values.static.repository }}:{{ .Values.static.tag | default "alpine" }}"
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "250m"
+          limits:
+            memory: "200Mi"
+            cpu: "500m"
+        ports:
+          - name: http
+            containerPort: 80
+        volumeMounts:
+          - mountPath: /usr/share/nginx/html
+            name: static-data
+            subPath: static
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http

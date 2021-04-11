@@ -19,6 +19,7 @@ spec:
     {{- end }}
       labels:
         {{- include "pet2cattle.selectorLabels" . | nindent 8 }}
+        component: app
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -94,13 +95,17 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /favicon.ico
+              port: http
           livenessProbe:
             httpGet:
-              path: /
+              path: /favicon.ico
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /favicon.ico
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

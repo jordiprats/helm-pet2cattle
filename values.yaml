@@ -9,6 +9,12 @@ image:
   pullPolicy: IfNotPresent
   #tag: ""
 
+static:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  #tag: ""
+  port: 80
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
