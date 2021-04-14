@@ -31,7 +31,7 @@ spec:
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
-            value: "ssh -vvv -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/deploykeys/id_rsa"
+            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/deploykeys/id_rsa"
         {{- end }}
         volumeMounts:
           - mountPath: /media/usb
@@ -69,6 +69,22 @@ spec:
           httpGet:
             path: /health
             port: http
+      - name: git-pull-repo
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: [ "sh", "-xc", "cd /media/usb; while true; do git pull; sleep $(echo $RANDOM | grep -Eo \"^[0-9][0-9]\")m; done" ]
+        {{- if .Values.s3sync.key }}
+        env:
+          - name: GIT_SSH_COMMAND
+            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/deploykeys/id_rsa"
+        {{- end }}
+        volumeMounts:
+          - mountPath: /media/usb
+            name: static-data
+          {{- if .Values.s3sync.key }}
+          - name: deploykeys
+            mountPath: /root/deploykeys
+          {{- end }}
       volumes:
         - name: static-data
           emptyDir: {}
