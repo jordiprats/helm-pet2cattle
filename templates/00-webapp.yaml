@@ -107,6 +107,10 @@ spec:
             httpGet:
               path: /favicon.ico
               port: http
+          lifecycle:
+            postStart:
+              exec:
+                command: [ "/usr/local/bin/python", "/code/cachewarmer.py" ]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
