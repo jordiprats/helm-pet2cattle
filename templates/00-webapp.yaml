@@ -8,6 +8,10 @@ spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 2
   selector:
     matchLabels:
       {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
@@ -151,6 +155,31 @@ spec:
           volumeMounts:
             - mountPath: /whoosh/data
               name: index-data              
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: {{ .Chart.Name }}-cache-refresher
+          command: 
+          - /usr/local/bin/python
+          - /code/cacherefresher.py
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MINIO_URL
+              value: "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000"
+            - name: MINIO_BUCKET
+              value: "{{ .Values.pet2cattle.bucket.name }}"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-minio
+                  key: accesskey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-minio
+                  key: secretkey        
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

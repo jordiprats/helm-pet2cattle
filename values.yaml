@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: pet2cattle
+  repository: jordiprats/flask-pet2cattle
   pullPolicy: IfNotPresent
   #tag: ""
 
