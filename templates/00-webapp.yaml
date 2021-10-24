@@ -123,7 +123,7 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        - name: {{ .Chart.Name }}-crond-indexer
+        - name: {{ .Chart.Name }}-aux
           command: 
           - "/usr/bin/supervisord"
           - "-c"
