@@ -14,6 +14,7 @@ static:
   pullPolicy: IfNotPresent
   #tag: ""
   port: 80
+  replicaCount: 1
 
 imagePullSecrets: []
 nameOverride: ""

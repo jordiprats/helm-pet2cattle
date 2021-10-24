@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "pet2cattle.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.static.replicaCount }}
+  replicas: {{ .Values.static.replicaCount | default 1 }}
   selector:
     matchLabels:
       {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
