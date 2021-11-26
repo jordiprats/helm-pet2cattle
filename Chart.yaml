@@ -4,7 +4,7 @@ description: pet2cattle blog
 home: https://pet2cattle.com
 
 type: application
-version: 3.6
+version: 3.7
 appVersion: "3.88"
 
 sources:

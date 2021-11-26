@@ -27,7 +27,7 @@ spec:
       - name: git-repo
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: [ "sh", "-xc", "rm -fr /media/usb/*; git clone {{ .Values.pet2cattle.posts.repo }} /media/usb" ]
+        command: [ "sh", "-xc", "rm -fr /media/usb/*; rm -fr /media/usb/.*; git clone {{ .Values.pet2cattle.posts.repo }} /media/usb" ]
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
