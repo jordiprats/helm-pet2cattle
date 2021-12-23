@@ -40,17 +40,20 @@ service:
 ingress:
   enabled: false
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    #traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
-    # https://regex101.com
-    traefik.ingress.kubernetes.io/redirect-regex: ^(https?://www.pet2cattle.com|http://pet2cattle.com)/(.*)
-    traefik.ingress.kubernetes.io/redirect-replacement: https://pet2cattle.com/$2
+    kubernetes.io/ingress.class: traefik
+    # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: letsencrypt
+    # # acme.cert-manager.io/http01-ingress-class: traefik
+    # acme.cert-manager.io/http01-edit-in-place: "true"
+    # cert-manager.io/acme-challenge-type: http01
+    #
+    # traefik.ingress.kubernetes.io/router.tls: "true"
+    # traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    # traefik.ingress.kubernetes.io/redirect-regex: ^(https?://www.pet2cattle.com|http://pet2cattle.com)/(.*)
+    # traefik.ingress.kubernetes.io/redirect-replacement: https://pet2cattle.com/$2
 
   hosts:
-    - host: pet2cattle.com
-      paths: []
+    - pet2cattle.com
   tls: []
 
 resources: {}

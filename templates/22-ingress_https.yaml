@@ -1,12 +1,9 @@
 {{- if .Values.ingress.enabled -}}
 {{- if .Values.ingress.tls -}}
 {{- $fullName := include "pet2cattle.fullname" . -}}
+{{- $shortName := include "pet2cattle.name" . -}}
 {{- $appPort := .Values.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-https
@@ -17,30 +14,36 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls.hosts }}
   tls:
-    {{- range .Values.ingress.tls }}
     - hosts:
-        {{- range .hosts }}
+        {{- range .Values.ingress.tls.hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ .secretName }}
-    {{- end }}
+      secretName: {{ $shortName }}-cert-https
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ . | quote }}
       http:
         paths:
-          - backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $appPort }}
-    - host: "static.{{ .host }}"
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
+    - host: "static.{{ . }}"
       http:
         paths:
-          - backend:
-              serviceName: {{ $fullName }}-static
-              servicePort: http
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-static
+                port:
+                  name: http
     {{- end }}
   {{- end }}
   {{- end }}

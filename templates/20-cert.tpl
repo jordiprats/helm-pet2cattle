@@ -3,16 +3,16 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "pet2cattle.name" . }}-le-crt
+  name: {{ include "pet2cattle.name" . }}-cert-https
 spec:
-  secretName: tls-secret
+  secretName: {{ include "pet2cattle.name" . }}-cert-https
   issuerRef:
-    kind: Issuer
+    kind: ClusterIssuer
     name: letsencrypt
-{{- range .Values.ingress.hosts }}  
-  commonName: {{ .host }}
+  commonName: {{ index .Values.ingress.tls.hosts 0 }}
   dnsNames:
-  - {{ .host }}
+{{- range .Values.ingress.tls.hosts }}
+  - {{ . }}
 {{- end }}  
 {{- end }}
 {{- end }}

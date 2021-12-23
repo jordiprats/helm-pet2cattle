@@ -1,4 +1,5 @@
 pet2cattle_values.yaml
+issuer.yaml
 Chart.lock
 charts/
 deploykeys/[^.]*
