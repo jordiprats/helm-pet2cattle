@@ -4,6 +4,9 @@
 
 replicaCount: 2
 
+redirector:
+  replicaCount: 1
+
 image:
   repository: jordiprats/flask-pet2cattle
   pullPolicy: IfNotPresent
