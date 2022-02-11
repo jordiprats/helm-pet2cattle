@@ -5,7 +5,7 @@ home: https://pet2cattle.com
 
 type: application
 version: "3.7"
-appVersion: "4.12"
+appVersion: "4.13"
 
 sources:
 - https://github.com/jordiprats/helm-pet2cattle
