@@ -1,0 +1,50 @@
+{{- if .Values.ingress.enabled -}}
+{{- if .Values.ingress.tls -}}
+{{- $fullName := include "pet2cattle.fullname" . -}}
+{{- $shortName := include "pet2cattle.name" . -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $fullName }}-http
+spec:
+  entryPoints:
+    - web
+  routes:
+    {{- with (first .Values.ingress.hosts) }}
+    - match: Host(`{{ . }}`)
+    {{- end }}
+      middlewares:
+        - name: {{ $fullName }}-redirectscheme
+      kind: Rule
+      services:
+        - name: {{ $fullName }}
+          port: http
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $fullName }}-https
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    {{- with (first .Values.ingress.hosts) }}
+    - match: Host(`{{ . }}`)
+    {{- end }}
+      kind: Rule
+      services:
+        - name: {{ $fullName }}
+          port: http
+  tls:
+    secretName: {{ $shortName }}-cert-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ $fullName }}-redirectscheme
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+  {{- end }}
+  {{- end }}
