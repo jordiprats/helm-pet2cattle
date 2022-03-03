@@ -1,20 +1,27 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "pet2cattle.fullname" . }}
   labels:
     {{- include "pet2cattle.labels" . | nindent 4 }}
 spec:
+  serviceName: webapp
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
-  strategy:
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 2
   selector:
     matchLabels:
       {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
+  volumeClaimTemplates:
+  - metadata:
+      name: index-data
+      labels:
+        component: index-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -110,14 +117,29 @@ spec:
             - mountPath: /whoosh/data
               name: index-data              
           startupProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1000
             httpGet:
               path: /favicon.ico
               port: http
           livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1000
             httpGet:
               path: /favicon.ico
               port: http
           readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1000
             httpGet:
               path: /favicon.ico
               port: http
@@ -154,10 +176,7 @@ spec:
             - mountPath: /whoosh/data
               name: index-data              
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      volumes:
-        - name: index-data
-          emptyDir: {}            
+            {{- toYaml .Values.resources | nindent 12 }}       
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

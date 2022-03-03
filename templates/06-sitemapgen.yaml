@@ -3,6 +3,9 @@ kind: CronJob
 metadata:
   name: {{ include "pet2cattle.fullname" . }}-sitemapgen
 spec:
+  schedule: '0 0 * * *'
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     metadata:
       name: {{ include "pet2cattle.fullname" . }}-sitemapgen
@@ -53,5 +56,4 @@ spec:
             name: {{ include "pet2cattle.fullname" . }}-indexer
             resources: {}
           restartPolicy: OnFailure
-  schedule: '0 0 * * *'
 status: {}
