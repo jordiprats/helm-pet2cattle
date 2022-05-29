@@ -1,4 +1,5 @@
 pet2cattle_values.yaml
+k3s_pet2cattle_values.yaml
 issuer.yaml
 Chart.lock
 charts/

@@ -42,6 +42,8 @@ service:
 
 ingress:
   enabled: false
+  letsencrypt: false
+  redirects: false
   annotations:
     kubernetes.io/ingress.class: traefik
     # kubernetes.io/tls-acme: "true"

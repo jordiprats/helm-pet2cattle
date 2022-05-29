@@ -1,3 +1,4 @@
+{{- if .Values.ingress.letsencrypt -}}
 {{- if .Values.ingress.enabled -}}
 {{- if .Values.ingress.tls -}}
 apiVersion: cert-manager.io/v1
@@ -14,5 +15,6 @@ spec:
 {{- range .Values.ingress.tls.hosts }}
   - {{ . }}
 {{- end }}  
+{{- end }}
 {{- end }}
 {{- end }}

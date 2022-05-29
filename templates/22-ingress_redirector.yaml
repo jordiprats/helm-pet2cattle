@@ -1,3 +1,4 @@
+{{- if .Values.ingress.redirects -}}
 {{- if .Values.ingress.enabled -}}
 {{- if .Values.ingress.tls -}}
 {{- $fullName := include "pet2cattle.fullname" . -}}
@@ -45,5 +46,6 @@ spec:
                 port:
                   name: http
     {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}

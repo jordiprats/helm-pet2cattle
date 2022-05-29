@@ -1,3 +1,4 @@
+{{- if .Values.ingress.redirects -}}
 {{- if .Values.ingress.enabled -}}
 {{- if .Values.ingress.tls -}}
 {{- $fullName := include "pet2cattle.fullname" . -}}
@@ -46,5 +47,6 @@ spec:
   redirectScheme:
     scheme: https
     permanent: true
+  {{- end }}
   {{- end }}
   {{- end }}
