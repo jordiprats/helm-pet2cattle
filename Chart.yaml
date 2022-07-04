@@ -4,14 +4,9 @@ description: pet2cattle blog
 home: https://pet2cattle.com
 
 type: application
-version: "3.8"
+version: "4.0"
 appVersion: "5.0"
 
 sources:
 - https://github.com/jordiprats/helm-pet2cattle
 - https://github.com/jordiprats/flask-pet2cattle
-
-dependencies:
-  - name: minio
-    version: 8.0.8
-    repository: https://helm.min.io/

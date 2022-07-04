@@ -95,7 +95,4 @@ pet2cattle:
 s3sync:
   key: false
 
-# minio dependency
-minio:
-  persistence:
-    size: 20Gi
+minio: {}
