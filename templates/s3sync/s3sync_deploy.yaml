@@ -46,8 +46,10 @@ spec:
             - name: S3_ENV_AUTH
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
           volumeMounts:
+            {{- if not .Values.pet2cattle.s3.envAuth }}
             - name: miniosecret
               mountPath: /etc/minio
+            {{- end }}
             {{ if .Values.s3sync.key -}}
             - name: deploykeys
               mountPath: /root/deploykeys
@@ -55,9 +57,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
+        {{- if not .Values.pet2cattle.s3.envAuth }}
         - name: miniosecret
           secret:
             secretName: {{ .Release.Name }}-minio
+        {{- end }}
         {{- if .Values.s3sync.key }}
         - name: deploykeys
           secret:
