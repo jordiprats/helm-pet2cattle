@@ -13,13 +13,15 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.tls .Values.ingress.tls.hosts }}
+  {{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls.hosts }}
   tls:
     - hosts:
         {{- with (first .Values.ingress.tls.hosts) }}
         - {{ . | quote }}
         {{- end }}
       secretName: {{ $shortName }}-cert-https
+  {{- end }}
   {{- end }}
   rules:
     {{- with (first .Values.ingress.hosts) }}
