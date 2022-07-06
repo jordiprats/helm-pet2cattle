@@ -1,5 +1,4 @@
 {{- if .Values.ingress.enabled -}}
-{{- if .Values.ingress.tls -}}
 {{- $fullName := include "pet2cattle.fullname" . -}}
 {{- $shortName := include "pet2cattle.name" . -}}
 {{- $appPort := .Values.service.port -}}
@@ -14,7 +13,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls.hosts }}
+  {{- if and .Values.ingress.tls .Values.ingress.tls.hosts }}
   tls:
     - hosts:
         {{- with (first .Values.ingress.tls.hosts) }}
@@ -45,5 +44,4 @@ spec:
                 port:
                   name: http
     {{- end }}
-  {{- end }}
-  {{- end }}
+{{ end }}
