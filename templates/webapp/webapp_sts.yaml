@@ -45,8 +45,10 @@ spec:
           - /code/sitemapgen.py
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
+            {{- if eq .Values.pet2cattle.s3.provider "Minio" }}
             - name: MINIO_URL
               value: {{ .Values.minio.url | default "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000" }}
+            {{- end }}
             - name: MINIO_BUCKET
               value: "{{ .Values.pet2cattle.bucket.name }}"
             - name: S3_PROVIDER
@@ -72,8 +74,10 @@ spec:
           - /code/indexer.py
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
+            {{- if eq .Values.pet2cattle.s3.provider "Minio" }}
             - name: MINIO_URL
               value: {{ .Values.minio.url | default "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000" }}
+            {{- end }}
             - name: MINIO_BUCKET
               value: "{{ .Values.pet2cattle.bucket.name }}"
             - name: S3_PROVIDER
@@ -105,8 +109,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{- if eq .Values.pet2cattle.s3.provider "Minio" }}
             - name: MINIO_URL
               value: {{ .Values.minio.url | default "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000" }}
+            {{- end }}
             - name: MINIO_BUCKET
               value: "{{ .Values.pet2cattle.bucket.name }}"
             - name: S3_PROVIDER
@@ -174,8 +180,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{- if eq .Values.pet2cattle.s3.provider "Minio" }}
             - name: MINIO_URL
               value: {{ .Values.minio.url | default "http://{{ .Release.Name }}-minio.{{ .Release.Namespace }}.svc.cluster.local:9000" }}
+            {{- end }}
             - name: MINIO_BUCKET
               value: "{{ .Values.pet2cattle.bucket.name }}"
             - name: S3_PROVIDER
