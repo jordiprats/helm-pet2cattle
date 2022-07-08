@@ -55,6 +55,8 @@ spec:
               value: "{{ .Values.pet2cattle.s3.provider | default "Minio" }}"
             - name: S3_ENV_AUTH
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
+            - name: CACHE_DIR
+              value: "/cache"
             {{- if not .Values.pet2cattle.s3.envAuth }}
             - name: MINIO_ACCESS_KEY
               valueFrom:
@@ -67,6 +69,9 @@ spec:
                   name: {{ .Release.Name }}-minio
                   key: secretkey
             {{- end }}
+          volumeMounts:            
+            - mountPath: /cache
+              name: cache-data
           resources: {}     
         - name: {{ include "pet2cattle.fullname" . }}-indexer
           command:
@@ -86,6 +91,8 @@ spec:
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
             - name: FULLTEXT_INDEX_PATH
               value: "/whoosh/data"    
+            - name: CACHE_DIR
+              value: "/cache"
             {{- if not .Values.pet2cattle.s3.envAuth }}          
             - name: MINIO_ACCESS_KEY
               valueFrom:
@@ -101,6 +108,8 @@ spec:
           volumeMounts:
             - mountPath: /whoosh/data
               name: index-data               
+            - mountPath: /cache
+              name: cache-data
           resources: {}      
       containers:
         - name: {{ .Chart.Name }}
@@ -121,6 +130,8 @@ spec:
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
             - name: FULLTEXT_INDEX_PATH
               value: "/whoosh/data"
+            - name: CACHE_DIR
+              value: "/cache"
             {{- if not .Values.pet2cattle.s3.envAuth }}
             - name: MINIO_ACCESS_KEY
               valueFrom:
@@ -140,6 +151,8 @@ spec:
           volumeMounts:
             - mountPath: /whoosh/data
               name: index-data              
+            - mountPath: /cache
+              name: cache-data
           startupProbe:
             initialDelaySeconds: 10
             periodSeconds: 10
@@ -192,6 +205,8 @@ spec:
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
             - name: FULLTEXT_INDEX_PATH
               value: "/whoosh/data"
+            - name: CACHE_DIR
+              value: "/cache"
             {{- if not .Values.pet2cattle.s3.envAuth }}
             - name: MINIO_ACCESS_KEY
               valueFrom:
@@ -206,9 +221,14 @@ spec:
             {{- end }}
           volumeMounts:
             - mountPath: /whoosh/data
-              name: index-data              
+              name: index-data
+            - mountPath: /cache
+              name: cache-data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}       
+      volumes:
+        - name: cache-data
+          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

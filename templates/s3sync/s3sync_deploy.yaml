@@ -27,6 +27,27 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-s3sync
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -xc
+            - "mkdir -p $HOME/.ssh; chmod 700 $HOME/.ssh; cat /home/deploykeys/id_rsa > $HOME/.ssh/id_rsa && chmod 600 $HOME/.ssh/id_rsa"
+          volumeMounts:
+            - name: home
+              mountPath: /home/pet2cattle
+            - name: tmp
+              mountPath: /code/reposync_tmp
+            {{- if not .Values.pet2cattle.s3.envAuth }}
+            - name: miniosecret
+              mountPath: /etc/minio
+            {{- end }}
+            {{ if .Values.s3sync.key -}}
+            - name: deploykeys
+              mountPath: /home/deploykeys
+            {{- end }}
       containers:
         - name: "{{ .Chart.Name }}-s3sync"
           securityContext:
@@ -55,10 +76,6 @@ spec:
             {{- if not .Values.pet2cattle.s3.envAuth }}
             - name: miniosecret
               mountPath: /etc/minio
-            {{- end }}
-            {{ if .Values.s3sync.key -}}
-            - name: deploykeys
-              mountPath: /home/deploykeys
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
