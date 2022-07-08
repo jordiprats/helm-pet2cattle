@@ -51,14 +51,14 @@ spec:
             - name: home
               mountPath: /home/pet2cattle
             - name: tmp
-              mountPath: /code/tmp
+              mountPath: /code/reposync_tmp
             {{- if not .Values.pet2cattle.s3.envAuth }}
             - name: miniosecret
               mountPath: /etc/minio
             {{- end }}
             {{ if .Values.s3sync.key -}}
             - name: deploykeys
-              mountPath: /root/deploykeys
+              mountPath: /home/deploykeys
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

@@ -31,14 +31,14 @@ spec:
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
-            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/deploykeys/id_rsa"
+            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/deploykeys/id_rsa"
         {{- end }}
         volumeMounts:
           - mountPath: /media/usb
             name: static-data
           {{- if .Values.s3sync.key }}
           - name: deploykeys
-            mountPath: /root/deploykeys
+            mountPath: /home/deploykeys
           {{- end }}
       containers:
       - name: pet2cattle-static
@@ -72,18 +72,18 @@ spec:
       - name: git-pull-repo
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: [ "sh", "-xc", "cd /media/usb; while true; do git pull; sleep $(echo $RANDOM | grep -Eo \"^[0-9][0-9]\")m; done" ]
+        command: [ "sh", "-xc", "cd /media/usb; while true; do git pull; sleep $(echo $RANDOM | grep -Eo \"^[0-9][0-9]?\")m; done" ]
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
-            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/deploykeys/id_rsa"
+            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/deploykeys/id_rsa"
         {{- end }}
         volumeMounts:
           - mountPath: /media/usb
             name: static-data
           {{- if .Values.s3sync.key }}
           - name: deploykeys
-            mountPath: /root/deploykeys
+            mountPath: /home/deploykeys
           {{- end }}
       volumes:
         - name: static-data
