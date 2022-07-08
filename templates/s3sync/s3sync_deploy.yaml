@@ -75,7 +75,7 @@ spec:
         {{- if .Values.s3sync.key }}
         - name: deploykeys
           secret:
-            defaultMode: 0600
+            defaultMode: 0664
             secretName: {{ .Release.Name }}-deploykeys
         {{- end }}
       {{- with .Values.nodeSelector }}
