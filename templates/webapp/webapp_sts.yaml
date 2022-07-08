@@ -73,6 +73,8 @@ spec:
           volumeMounts:            
             - mountPath: /cache
               name: cache-data
+            - mountPath: /tmp
+              name: tmp-dir
           resources: {}     
         - name: {{ include "pet2cattle.fullname" . }}-indexer
           command:
@@ -111,6 +113,8 @@ spec:
               name: index-data               
             - mountPath: /cache
               name: cache-data
+            - mountPath: /tmp
+              name: tmp-dir
           resources: {}      
       containers:
         - name: {{ .Chart.Name }}
@@ -154,6 +158,8 @@ spec:
               name: index-data              
             - mountPath: /cache
               name: cache-data
+            - mountPath: /tmp
+              name: tmp-dir
           startupProbe:
             initialDelaySeconds: 10
             periodSeconds: 10
@@ -225,10 +231,14 @@ spec:
               name: index-data
             - mountPath: /cache
               name: cache-data
+            - mountPath: /tmp
+              name: tmp-dir
           resources:
             {{- toYaml .Values.resources | nindent 12 }}       
       volumes:
         - name: cache-data
+          emptyDir: {}
+        - name: tmp-dir
           emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
