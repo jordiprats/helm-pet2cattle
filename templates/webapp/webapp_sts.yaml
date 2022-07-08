@@ -32,6 +32,7 @@ spec:
         {{- include "pet2cattle.selectorLabels" . | nindent 8 }}
         component: app
     spec:
+      hostNetwork: {{ .Values.pet2cattle.hostNetwork }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

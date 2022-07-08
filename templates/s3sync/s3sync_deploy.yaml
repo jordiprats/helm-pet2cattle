@@ -21,6 +21,7 @@ spec:
         {{- include "pet2cattle-s3sync.selectorLabels" . | nindent 8 }}
         component: s3sync
     spec:
+      hostNetwork: {{ .Values.s3sync.hostNetwork }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

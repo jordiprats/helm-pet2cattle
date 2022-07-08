@@ -91,8 +91,10 @@ pet2cattle:
     name: "pet2cattle"
   posts:
     repo: git@github.com:jordiprats/posts-repo.git
+  hostNetwork: false
 
 s3sync:
   key: false
+  hostNetwork: false
 
 minio: {}
