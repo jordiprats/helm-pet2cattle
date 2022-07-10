@@ -23,17 +23,21 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: git-repo
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: [ "sh", "-xc", "rm -fr /media/usb/*; rm -fr /media/usb/.*; git clone {{ .Values.pet2cattle.posts.repo }} /media/usb" ]
+        command: [ "sh", "-xc", "mkdir -p /home/pet2cattle/.ssh; chmod 700 /home/pet2cattle/.ssh; cat /home/deploykeys/id_rsa > /home/pet2cattle/.ssh/id_rsa; chown 1000:1000 /home/pet2cattle/.ssh/id_rsa; chmod 600 /home/pet2cattle/.ssh/id_rsa; rm -fr /media/usb/*; rm -fr /media/usb/.*; git clone {{ .Values.pet2cattle.posts.repo }} /media/usb" ]
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
-            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/deploykeys/id_rsa"
+            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/pet2cattle/.ssh/id_rsa"
         {{- end }}
         volumeMounts:
+          - name: home
+            mountPath: /home/pet2cattle
           - mountPath: /media/usb
             name: static-data
           {{- if .Values.s3sync.key }}
@@ -76,9 +80,11 @@ spec:
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
-            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/deploykeys/id_rsa"
+            value: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /home/pet2cattle/.ssh/id_rsa"
         {{- end }}
         volumeMounts:
+          - name: home
+            mountPath: /home/pet2cattle
           - mountPath: /media/usb
             name: static-data
           {{- if .Values.s3sync.key }}
@@ -86,6 +92,8 @@ spec:
             mountPath: /home/deploykeys
           {{- end }}
       volumes:
+        - name: home
+          emptyDir: {}
         - name: static-data
           emptyDir: {}
         {{- if .Values.s3sync.key }}
