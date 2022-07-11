@@ -69,6 +69,8 @@ spec:
               value: "{{ .Values.pet2cattle.s3.provider | default "Minio" }}"
             - name: S3_ENV_AUTH
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
+            - name: S3_REGION
+              value: "{{ .Values.pet2cattle.bucket.name | default "us-west-2" }}"
           volumeMounts:
             - name: home
               mountPath: /home/pet2cattle

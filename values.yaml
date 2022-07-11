@@ -89,6 +89,7 @@ affinity: {}
 pet2cattle:
   bucket:
     name: "pet2cattle"
+    region: 'us-west-2'
   posts:
     repo: git@github.com:jordiprats/posts-repo.git
   hostNetwork: false
