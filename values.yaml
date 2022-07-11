@@ -87,6 +87,7 @@ tolerations: []
 affinity: {}
 
 pet2cattle:
+  debug: ""
   bucket:
     name: "pet2cattle"
     region: 'us-west-2'
