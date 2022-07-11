@@ -12,8 +12,12 @@ spec:
     spec:
       template:
         spec:
+          hostNetwork: {{ .Values.pet2cattle.hostNetwork }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 8 }}
           containers:
-          - command:
+          - name: {{ include "pet2cattle.fullname" . }}-sitemapgen
+            command:
             - /usr/local/bin/python
             - /code/sitemapgen.py
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -24,6 +28,12 @@ spec:
               {{- end }}
               - name: MINIO_BUCKET
                 value: "{{ .Values.pet2cattle.bucket.name }}"
+              - name: S3_PROVIDER
+                value: "{{ .Values.pet2cattle.s3.provider | default "Minio" }}"
+              - name: S3_ENV_AUTH
+                value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
+              - name: CACHE_DIR
+                value: "/cache"
               {{- if not .Values.pet2cattle.s3.envAuth }}
               - name: MINIO_ACCESS_KEY
                 valueFrom:
@@ -36,12 +46,17 @@ spec:
                     name: {{ .Release.Name }}-minio
                     key: secretkey
               {{- end }}
-            name: {{ include "pet2cattle.fullname" . }}-sitemapgen
+          volumeMounts:            
+            - mountPath: /cache
+              name: cache-data
+            - mountPath: /tmp
+              name: tmp-dir
             resources: {}
-          - command:
+          - name: {{ include "pet2cattle.fullname" . }}-indexer
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            command:
             - /usr/local/bin/python
             - /code/indexer.py
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             env:
               {{- if eq .Values.pet2cattle.s3.provider "Minio" }}
               - name: MINIO_URL
@@ -49,7 +64,15 @@ spec:
               {{- end }}
               - name: MINIO_BUCKET
                 value: "{{ .Values.pet2cattle.bucket.name }}"
-              {{- if not .Values.pet2cattle.s3.envAuth }}
+              - name: S3_PROVIDER
+                value: "{{ .Values.pet2cattle.s3.provider | default "Minio" }}"
+              - name: S3_ENV_AUTH
+                value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
+              - name: FULLTEXT_INDEX_PATH
+                value: "/whoosh/data"    
+              - name: CACHE_DIR
+                value: "/cache"
+              {{- if not .Values.pet2cattle.s3.envAuth }}          
               - name: MINIO_ACCESS_KEY
                 valueFrom:
                   secretKeyRef:
@@ -61,7 +84,18 @@ spec:
                     name: {{ .Release.Name }}-minio
                     key: secretkey
               {{- end }}
-            name: {{ include "pet2cattle.fullname" . }}-indexer
+            volumeMounts:
+              - mountPath: /whoosh/data
+                name: index-data               
+              - mountPath: /cache
+                name: cache-data
+              - mountPath: /tmp
+                name: tmp-dir
             resources: {}
           restartPolicy: OnFailure
+          volumes:
+            - name: cache-data
+              emptyDir: {}
+            - name: tmp-dir
+              emptyDir: {}
 status: {}
