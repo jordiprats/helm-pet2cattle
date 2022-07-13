@@ -45,7 +45,7 @@ spec:
                   secretKeyRef:
                     name: {{ .Release.Name }}-minio
                     key: secretkey
-              {{- end }}
+              {{ end -}}
           volumeMounts:            
             - mountPath: /cache
               name: cache-data
