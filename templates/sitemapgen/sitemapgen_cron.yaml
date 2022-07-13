@@ -46,7 +46,7 @@ spec:
                     name: {{ .Release.Name }}-minio
                     key: secretkey
               {{- end }}
-            volumeMounts:            
+            volumeMounts:
               - mountPath: /cache
                 name: cache-data
               - mountPath: /tmp
@@ -86,7 +86,7 @@ spec:
               {{- end }}
             volumeMounts:
               - mountPath: /whoosh/data
-                name: index-data               
+                name: index-data
               - mountPath: /cache
                 name: cache-data
               - mountPath: /tmp
@@ -97,5 +97,7 @@ spec:
             - name: cache-data
               emptyDir: {}
             - name: tmp-dir
+              emptyDir: {}
+            - name: index-data
               emptyDir: {}
 status: {}
