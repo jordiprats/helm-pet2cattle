@@ -72,7 +72,7 @@ spec:
                 value: "/whoosh/data"    
               - name: CACHE_DIR
                 value: "/cache"
-              {{ if not .Values.pet2cattle.s3.envAuth -}}          
+              {{- if not .Values.pet2cattle.s3.envAuth }}
               - name: MINIO_ACCESS_KEY
                 valueFrom:
                   secretKeyRef:
