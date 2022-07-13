@@ -90,7 +90,7 @@ spec:
         {{ if not .Values.pet2cattle.s3.envAuth -}}
         - name: miniosecret
           secret:
-            secretName: {{ .Release.Name }}-minio
+            secretName: {{ .Release.Name }}-accesskeys
         {{- end }}
         {{- if .Values.s3sync.key }}
         - name: deploykeys
