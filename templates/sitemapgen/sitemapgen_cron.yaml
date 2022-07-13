@@ -34,7 +34,7 @@ spec:
                 value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
               - name: CACHE_DIR
                 value: "/cache"
-              {{ if not .Values.pet2cattle.s3.envAuth -}}
+              {{- if not .Values.pet2cattle.s3.envAuth }}
               - name: MINIO_ACCESS_KEY
                 valueFrom:
                   secretKeyRef:
@@ -45,7 +45,7 @@ spec:
                   secretKeyRef:
                     name: {{ .Release.Name }}-minio
                     key: secretkey
-              {{ end -}}
+              {{- end }}
           volumeMounts:            
             - mountPath: /cache
               name: cache-data
