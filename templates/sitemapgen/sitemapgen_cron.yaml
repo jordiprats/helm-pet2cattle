@@ -38,12 +38,12 @@ spec:
               - name: MINIO_ACCESS_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: {{ .Release.Name }}-minio
+                    name: {{ .Release.Name }}-accesskeys
                     key: accesskey
               - name: MINIO_SECRET_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: {{ .Release.Name }}-minio
+                    name: {{ .Release.Name }}-accesskeys
                     key: secretkey
               {{- end }}
             volumeMounts:
@@ -76,12 +76,12 @@ spec:
               - name: MINIO_ACCESS_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: {{ .Release.Name }}-minio
+                    name: {{ .Release.Name }}-accesskeys
                     key: accesskey
               - name: MINIO_SECRET_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: {{ .Release.Name }}-minio
+                    name: {{ .Release.Name }}-accesskeys
                     key: secretkey
               {{- end }}
             volumeMounts:
