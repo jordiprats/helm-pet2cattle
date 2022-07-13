@@ -41,7 +41,7 @@ spec:
               mountPath: /home/pet2cattle
             - name: tmp
               mountPath: /code/reposync_tmp
-            {{- if not .Values.pet2cattle.s3.envAuth }}
+            {{ if not .Values.pet2cattle.s3.envAuth -}}
             - name: miniosecret
               mountPath: /etc/minio
             {{- end }}
@@ -76,7 +76,7 @@ spec:
               mountPath: /home/pet2cattle
             - name: tmp
               mountPath: /code/reposync_tmp
-            {{- if not .Values.pet2cattle.s3.envAuth }}
+            {{ if not .Values.pet2cattle.s3.envAuth -}}
             - name: miniosecret
               mountPath: /etc/minio
             {{- end }}
@@ -87,7 +87,7 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
-        {{- if not .Values.pet2cattle.s3.envAuth }}
+        {{ if not .Values.pet2cattle.s3.envAuth -}}
         - name: miniosecret
           secret:
             secretName: {{ .Release.Name }}-minio

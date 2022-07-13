@@ -58,7 +58,7 @@ spec:
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
             - name: CACHE_DIR
               value: "/cache"
-            {{- if not .Values.pet2cattle.s3.envAuth }}
+            {{ if not .Values.pet2cattle.s3.envAuth -}}
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -96,7 +96,7 @@ spec:
               value: "/whoosh/data"    
             - name: CACHE_DIR
               value: "/cache"
-            {{- if not .Values.pet2cattle.s3.envAuth }}          
+            {{ if not .Values.pet2cattle.s3.envAuth -}}          
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -139,7 +139,7 @@ spec:
               value: "/cache"
             - name: DEBUG
               value: "{{ .Values.pet2cattle.debug | default "" }}"
-            {{- if not .Values.pet2cattle.s3.envAuth }}
+            {{ if not .Values.pet2cattle.s3.envAuth -}}
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -216,7 +216,7 @@ spec:
               value: "/whoosh/data"
             - name: CACHE_DIR
               value: "/cache"
-            {{- if not .Values.pet2cattle.s3.envAuth }}
+            {{ if not .Values.pet2cattle.s3.envAuth -}}
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
