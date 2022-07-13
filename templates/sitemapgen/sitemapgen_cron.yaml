@@ -46,11 +46,11 @@ spec:
                     name: {{ .Release.Name }}-minio
                     key: secretkey
               {{- end }}
-          volumeMounts:            
-            - mountPath: /cache
-              name: cache-data
-            - mountPath: /tmp
-              name: tmp-dir
+            volumeMounts:            
+              - mountPath: /cache
+                name: cache-data
+              - mountPath: /tmp
+                name: tmp-dir
             resources: {}
           - name: {{ include "pet2cattle.fullname" . }}-indexer
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
