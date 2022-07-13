@@ -14,7 +14,7 @@ spec:
         spec:
           hostNetwork: {{ .Values.pet2cattle.hostNetwork }}
           securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 8 }}
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
           containers:
           - name: {{ include "pet2cattle.fullname" . }}-sitemapgen
             command:
