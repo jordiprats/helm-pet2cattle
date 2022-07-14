@@ -71,6 +71,8 @@ spec:
               value: "{{ .Values.pet2cattle.s3.envAuth | default "false" }}"
             - name: S3_REGION
               value: "{{ .Values.pet2cattle.bucket.name | default "us-west-2" }}"
+            - name: DEBUG
+              value: "{{ .Values.pet2cattle.debug | default "" }}"
           volumeMounts:
             - name: home
               mountPath: /home/pet2cattle

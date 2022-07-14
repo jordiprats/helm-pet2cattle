@@ -12,16 +12,16 @@ spec:
   selector:
     matchLabels:
       {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
-  volumeClaimTemplates:
-  - metadata:
-      name: index-data
-      labels:
-        component: index-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 10Gi
+  # volumeClaimTemplates:
+  # - metadata:
+  #     name: index-data
+  #     labels:
+  #       component: index-data
+  #   spec:
+  #     accessModes: [ "ReadWriteOnce" ]
+  #     resources:
+  #       requests:
+  #         storage: 10Gi
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -243,6 +243,9 @@ spec:
         - name: cache-data
           emptyDir: {}
         - name: tmp-dir
+          emptyDir: {}
+        # temporally emptyDir
+        - name: index-data
           emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
