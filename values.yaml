@@ -95,6 +95,12 @@ pet2cattle:
     repo: git@github.com:jordiprats/posts-repo.git
   hostNetwork: false
 
+web:
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
 s3sync:
   key: false
   hostNetwork: false
