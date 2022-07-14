@@ -171,7 +171,7 @@ spec:
             successThreshold: 1
             failureThreshold: 1000
             httpGet:
-              path: /favicon.ico
+              path: {{ .Values.web.startupProbe.path | default "/" }}
               port: http
           livenessProbe:
             initialDelaySeconds: 10
@@ -180,7 +180,7 @@ spec:
             successThreshold: 1
             failureThreshold: 1000
             httpGet:
-              path: /favicon.ico
+              path: {{ .Values.web.livenessProbe.path | default "/" }}
               port: http
           readinessProbe:
             initialDelaySeconds: 10
@@ -189,7 +189,7 @@ spec:
             successThreshold: 1
             failureThreshold: 1000
             httpGet:
-              path: /favicon.ico
+              path: {{ .Values.web.readinessProbe.path | default "/" }}
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

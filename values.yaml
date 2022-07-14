@@ -99,6 +99,13 @@ web:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  startupProbe:
+    path: /
+  livenessProbe:
+    path: /
+  readinessProbe:
+    path: /
+
 
 
 s3sync:
