@@ -76,7 +76,10 @@ spec:
       - name: git-pull-repo
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: [ "sh", "-xc", "cd /media/usb; while true; do git pull; sleep $(echo $RANDOM | grep -Eo \"^[0-9][0-9]?\")m; done" ]
+        command:
+          - "sh" 
+          - "-xc"
+          - "cd /media/usb; while true; do git pull; sleep $(echo $RANDOM | grep -Eo \"^[0-9][0-9]?\")m; done"
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
