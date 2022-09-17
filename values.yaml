@@ -94,6 +94,8 @@ pet2cattle:
   posts:
     repo: git@github.com:jordiprats/posts-repo.git
   hostNetwork: false
+  minio:
+    install: false
 
 web:
   nodeSelector: {}
@@ -105,8 +107,6 @@ web:
     path: /
   readinessProbe:
     path: /
-
-
 
 s3sync:
   key: false

@@ -10,3 +10,9 @@ appVersion: "5.20"
 sources:
 - https://github.com/jordiprats/helm-pet2cattle
 - https://github.com/jordiprats/flask-pet2cattle
+
+dependencies:
+  - name: minio
+    version: 8.0.8
+    repository: https://helm.min.io/
+    condition: pet2cattle.minio.install
