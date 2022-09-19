@@ -30,6 +30,8 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: [ "sh", "-xc", "mkdir -p /home/pet2cattle/.ssh; chmod 700 /home/pet2cattle/.ssh; cat /home/deploykeys/id_rsa > /home/pet2cattle/.ssh/id_rsa; chown 1000:1000 /home/pet2cattle/.ssh/id_rsa; chmod 600 /home/pet2cattle/.ssh/id_rsa; rm -fr /media/usb/*; rm -fr /media/usb/.*; git clone {{ .Values.pet2cattle.posts.repo }} /media/usb" ]
+        securityContext:
+          runAsUser: 0
         {{- if .Values.s3sync.key }}
         env:
           - name: GIT_SSH_COMMAND
