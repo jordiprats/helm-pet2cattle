@@ -6,24 +6,6 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ $fullName }}-http
-spec:
-  entryPoints:
-    - web
-  routes:
-    {{- with (first .Values.ingress.hosts) }}
-    - match: Host(`{{ . }}`)
-    {{- end }}
-      middlewares:
-        - name: {{ $fullName }}-redirectscheme
-      kind: Rule
-      services:
-        - name: {{ $fullName }}
-          port: http
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
   name: {{ $fullName }}-https
 spec:
   entryPoints:
@@ -40,9 +22,26 @@ spec:
     secretName: {{ $shortName }}-cert-https
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $fullName }}-http2s
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/`)
+      priority: 1000
+      kind: Rule
+      services:
+        - kind: TraefikService
+          name: noop@internal
+      middlewares:
+        - name: {{ $fullName }}-http2s
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ $fullName }}-redirectscheme
+  name: {{ $fullName }}-http2s
 spec:
   redirectScheme:
     scheme: https
