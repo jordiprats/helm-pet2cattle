@@ -203,6 +203,10 @@ spec:
             httpGet:
               path: {{ .Values.web.readinessProbe.path | default "/" }}
               port: http
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sleep","5s"]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-aux
