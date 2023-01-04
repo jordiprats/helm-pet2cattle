@@ -8,8 +8,7 @@ on:
 
 jobs:
   ci:
-    runs-on: [self-hosted]
-
+    runs-on: ubuntu-18.04
     steps:
       
       - name: check out local repo
