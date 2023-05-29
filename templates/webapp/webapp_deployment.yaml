@@ -1,27 +1,16 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "pet2cattle.fullname" . }}
   labels:
     {{- include "pet2cattle.labels" . | nindent 4 }}
 spec:
-  serviceName: webapp
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
       {{- include "pet2cattle.selectorLabels" . | nindent 6 }}
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: index-data
-  #     labels:
-  #       component: index-data
-  #   spec:
-  #     accessModes: [ "ReadWriteOnce" ]
-  #     resources:
-  #       requests:
-  #         storage: 10Gi
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -264,7 +253,6 @@ spec:
           emptyDir: {}
         - name: tmp-dir
           emptyDir: {}
-        # temporally emptyDir
         - name: index-data
           emptyDir: {}
       {{- with .Values.web.nodeSelector }}
